@@ -1,15 +1,17 @@
 import { css } from '@emotion/react'
 import { Link } from '@reach/router'
+import { useTheme } from 'contexts/ThemeContext'
 import React from 'react'
+import { RiContrast2Line, RiContrastLine } from 'react-icons/ri'
 
 const navCSS = css`
-  background-color: white;
-  border-bottom: 1px solid whitesmoke;
   min-height: 50px;
   display: flex;
   justify-content: center;
+  align-items: center;
   overflow-x: auto;
   padding: 8px 0;
+  position: relative;
 `
 
 const linkCSS = css`
@@ -31,12 +33,31 @@ const linkCSS = css`
   }
 `
 
+const themeButtonCSS = css`
+  padding: 8px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 8vmax;
+`
+
 function Navigation({ children }) {
   // Make sure children is an array
   const arrayChildren = React.Children.toArray(children.props.children)
+  const { curThemeKey, toggleTheme } = useTheme()
+  const isDark = curThemeKey === 'darkTheme'
 
   return (
-    <nav className='Navigation' css={navCSS}>
+    <nav
+      className='Navigation'
+      css={[
+        navCSS,
+        (theme) => ({
+          backgroundColor: theme.colors.background,
+          borderBottom: `1px solid ${theme.colors.black[6]}`,
+        }),
+      ]}>
       {arrayChildren.map((child) => {
         const { path, label } = child.props
 
@@ -53,6 +74,10 @@ function Navigation({ children }) {
           </Link>
         )
       })}
+
+      <button type='button' css={themeButtonCSS} onClick={() => toggleTheme()}>
+        {isDark ? <RiContrastLine /> : <RiContrast2Line />}
+      </button>
     </nav>
   )
 }
