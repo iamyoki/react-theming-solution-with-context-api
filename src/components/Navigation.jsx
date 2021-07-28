@@ -3,16 +3,21 @@ import { Link } from '@reach/router'
 import { useTheme } from 'contexts/ThemeContext'
 import React from 'react'
 import { RiContrast2Line, RiContrastLine } from 'react-icons/ri'
+import { themeCSS } from 'utils/themeCSS'
 
-const navCSS = css`
-  min-height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-x: auto;
-  padding: 8px 0;
-  position: relative;
-`
+const navCSS = themeCSS(
+  (theme) => css`
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    padding: 8px 0;
+    position: relative;
+    background-color: ${theme.colors.background};
+    transition: 0.2s;
+  `
+)
 
 const linkCSS = css`
   /* background-color: lavender; */
@@ -54,7 +59,7 @@ function Navigation({ children }) {
       css={[
         navCSS,
         (theme) => ({
-          backgroundColor: theme.colors.background,
+          // backgroundColor: theme.colors.background,
           borderBottom: `1px solid ${theme.colors.black[6]}`,
         }),
       ]}>

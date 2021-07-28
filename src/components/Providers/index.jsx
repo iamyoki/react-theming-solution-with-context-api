@@ -8,8 +8,8 @@ function Providers({ children }) {
   return (
     <ThemeProvider
       themes={{
-        theme: THEME,
-        darkTheme: DARK_THEME,
+        light: THEME,
+        dark: DARK_THEME,
       }}>
       <EmotionThemeProvider>
         <QueryParamProvider reachHistory={globalHistory}>

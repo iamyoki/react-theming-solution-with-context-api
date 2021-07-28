@@ -1,4 +1,5 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useDetectSystemDarkMode } from './ThemeContext/useDetectSystemDarkMode'
 
 const ThemeContext = React.createContext()
 
@@ -6,16 +7,41 @@ const ThemeContext = React.createContext()
  * @template  T
  * @param {{
  *  themes: T;
- *  defaultThemeKey: keyof T
+ *  defaultThemeKey: keyof T;
+ *  defaultFollowSystem: boolean;
+ *  lightThemeKey: string;
+ *  darkThemeKey: string;
  * }}
  */
-function ThemeProvider({ children, themes, defaultThemeKey }) {
+function ThemeProvider({
+  children,
+  themes,
+  defaultThemeKey,
+  defaultFollowSystem = true,
+  lightThemeKey = 'light',
+  darkThemeKey = 'dark',
+}) {
   if (themes === undefined) {
     throw new TypeError(`Please make your themes prop a plain object`)
   }
 
-  const defaultTheme = themes[defaultThemeKey] ?? Object.values(themes)[0]
+  const { isDark } = useDetectSystemDarkMode()
+  let defaultTheme = themes[defaultThemeKey] ?? Object.values(themes)[0]
+  if (defaultFollowSystem) {
+    defaultTheme = isDark ? themes[darkThemeKey] : themes[lightThemeKey]
+  }
   const [theme, setTheme] = useState(defaultTheme)
+
+  console.log(theme)
+
+  useEffect(
+    function handleFollowSystem() {
+      if (defaultFollowSystem) {
+        setTheme(isDark ? themes[darkThemeKey] : themes[lightThemeKey])
+      }
+    },
+    [isDark]
+  )
 
   const value = {
     themes,
